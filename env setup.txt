@@ -1,0 +1,82 @@
+Install Terraform:
+Step1- Register HashiCorp GPG keys
+$ curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+
+Step2- Add HashiCorp package repository
+$ sudo apt-add-repository "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+
+Step3- Update "Ubuntu" packages list
+$ sudo apt update
+
+Step4- Install Terraform on Ubuntu
+$ sudo apt install terraform
+
+Step5 - Check Terraform version
+# Check version of Terraform 
+$ terraform -v
+# Check PATH of Terraform 
+$ which terraform
+==========================================================================
+Install AWS CLI:
+sudo apt install awscli
+
+==========================================================================
+$ aws configure
+export AWS_ACCESS_KEY_ID=
+export AWS_SECRET_ACCESS_KEY=
+export AWS_DEFAULT_REGION=
+
+===========================================================================
+Terraform command:
+$ terraform init
+$ terraform validate
+$ terraform plan
+$ terraform apply -auto-approve
+
+Once Create take the statefile and upload to s3 bucket
+===========================================================================
+Install helm:
+curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -
+sudo apt-get install apt-transport-https --yes
+echo "deb https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+sudo apt-get update
+sudo apt-get install helm
+===========================================================================
+Install Kubectl: https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
+
+$ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+$ curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+$ echo "$(<kubectl.sha256)  kubectl" | sha256sum --check
+kubectl: OK
+$ sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+$ chmod +x kubectl
+$ mkdir -p ~/.local/bin/kubectl
+$ mv ./kubectl ~/.local/bin/kubectl
+
+$ kubectl version --client
+===========================================================================
+Create the namespace:
+kubectl create namespace 
+===========================================================================
+
+PUSH COMMANDS ECR
+
+Retrieve an authentication token and authenticate your Docker client to your registry.
+Use the AWS CLI:
+
+$ aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 093471887101.dkr.ecr.us-east-1.amazonaws.com
+
+Note: If you receive an error using the AWS CLI, make sure that you have the latest version of the AWS CLI and Docker installed.
+
+Build your Docker image using the following command. For information on building a Docker file from scratch see the instructions here . You can skip this step if your image is already built:
+
+$docker build -t ecr .
+
+After the build completes, tag your image so you can push the image to this repository:
+
+$ docker tag ecr:latest 093471887101.dkr.ecr.us-east-1.amazonaws.com/ecr:latest
+
+Run the following command to push this image to your newly created AWS repository:
+
+$ docker push 093471887101.dkr.ecr.us-east-1.amazonaws.com/ecr:latest
